@@ -1,11 +1,17 @@
-import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { useEffect, useMemo, useState } from 'react';
-import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
-import { CameraView, useCameraPermissions } from 'expo-camera';
-import { BlurView } from 'expo-blur';
-import { ArrowLeft, QrCode, ScanLine, Smartphone, X } from 'lucide-react-native';
-import QRCode from 'react-native-qrcode-svg';
-import { createDeviceHandoffPayload, parseDeviceHandoffPayload } from './payload';
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DeviceHandoffModal = DeviceHandoffModal;
+const jsx_runtime_1 = require("react/jsx-runtime");
+const react_1 = require("react");
+const react_native_1 = require("react-native");
+const expo_camera_1 = require("expo-camera");
+const expo_blur_1 = require("expo-blur");
+const lucide_react_native_1 = require("lucide-react-native");
+const react_native_qrcode_svg_1 = __importDefault(require("react-native-qrcode-svg"));
+const payload_1 = require("./payload");
 const DEFAULT_LABELS = {
     kicker: 'DEVICE HANDOFF',
     title: 'Transfer Device',
@@ -37,17 +43,17 @@ const DEFAULT_THEME = {
     lightFontFamily: undefined,
     boldFontFamily: undefined,
 };
-export function DeviceHandoffModal({ visible, deviceId, onClose, onApplyDeviceId, labels: labelsProp, theme: themeProp, payloadType, payloadVersion, qrSize = 210, }) {
+function DeviceHandoffModal({ visible, deviceId, onClose, onApplyDeviceId, labels: labelsProp, theme: themeProp, payloadType, payloadVersion, qrSize = 210, }) {
     const labels = { ...DEFAULT_LABELS, ...labelsProp };
     const theme = { ...DEFAULT_THEME, ...themeProp };
-    const [mode, setMode] = useState('menu');
-    const [permission, requestPermission] = useCameraPermissions();
-    const [scanned, setScanned] = useState(false);
-    const [error, setError] = useState(null);
-    const [applying, setApplying] = useState(false);
-    const payloadOptions = useMemo(() => ({ type: payloadType, version: payloadVersion }), [payloadType, payloadVersion]);
-    const qrValue = useMemo(() => (deviceId ? createDeviceHandoffPayload(deviceId, payloadOptions) : ''), [deviceId, payloadOptions]);
-    useEffect(() => {
+    const [mode, setMode] = (0, react_1.useState)('menu');
+    const [permission, requestPermission] = (0, expo_camera_1.useCameraPermissions)();
+    const [scanned, setScanned] = (0, react_1.useState)(false);
+    const [error, setError] = (0, react_1.useState)(null);
+    const [applying, setApplying] = (0, react_1.useState)(false);
+    const payloadOptions = (0, react_1.useMemo)(() => ({ type: payloadType, version: payloadVersion }), [payloadType, payloadVersion]);
+    const qrValue = (0, react_1.useMemo)(() => (deviceId ? (0, payload_1.createDeviceHandoffPayload)(deviceId, payloadOptions) : ''), [deviceId, payloadOptions]);
+    (0, react_1.useEffect)(() => {
         if (!visible)
             return;
         setMode('menu');
@@ -55,7 +61,7 @@ export function DeviceHandoffModal({ visible, deviceId, onClose, onApplyDeviceId
         setError(null);
         setApplying(false);
     }, [visible]);
-    useEffect(() => {
+    (0, react_1.useEffect)(() => {
         if (visible && mode === 'scan' && permission && !permission.granted) {
             requestPermission();
         }
@@ -65,7 +71,7 @@ export function DeviceHandoffModal({ visible, deviceId, onClose, onApplyDeviceId
             return;
         setScanned(true);
         setError(null);
-        const nextDeviceId = parseDeviceHandoffPayload(data, payloadOptions);
+        const nextDeviceId = (0, payload_1.parseDeviceHandoffPayload)(data, payloadOptions);
         if (!nextDeviceId) {
             setError(labels.invalidQr);
             setScanned(false);
@@ -89,35 +95,35 @@ export function DeviceHandoffModal({ visible, deviceId, onClose, onApplyDeviceId
     const lightFont = fontStyle(theme.lightFontFamily ?? theme.fontFamily);
     const mediumFont = fontStyle(theme.mediumFontFamily ?? theme.fontFamily);
     const boldFont = fontStyle(theme.boldFontFamily ?? theme.mediumFontFamily ?? theme.fontFamily);
-    return (_jsx(Modal, { visible: visible, transparent: true, animationType: "fade", statusBarTranslucent: true, onRequestClose: onClose, children: _jsxs(View, { style: [styles.backdrop, { backgroundColor: theme.backgroundColor }], children: [scannerReady ? (_jsx(CameraView, { style: StyleSheet.absoluteFill, facing: "back", onBarcodeScanned: handleBarcodeScanned, barcodeScannerSettings: { barcodeTypes: ['qr'] } })) : (_jsx(Pressable, { style: StyleSheet.absoluteFill, onPress: onClose })), scannerReady && _jsx(View, { style: styles.scanShade, pointerEvents: "none" }), _jsxs(View, { style: [styles.card, mode === 'scan' && styles.scanCard, { backgroundColor: theme.cardColor, borderColor: theme.borderColor }], children: [_jsx(BlurView, { intensity: theme.isDark ? 28 : 20, tint: theme.isDark ? 'dark' : 'light', style: StyleSheet.absoluteFill }), _jsx(View, { style: [styles.accentLine, { backgroundColor: theme.accentColor }] }), _jsxs(View, { style: styles.header, children: [mode !== 'menu' ? (_jsx(Pressable, { onPress: () => {
+    return ((0, jsx_runtime_1.jsx)(react_native_1.Modal, { visible: visible, transparent: true, animationType: "fade", statusBarTranslucent: true, onRequestClose: onClose, children: (0, jsx_runtime_1.jsxs)(react_native_1.View, { style: [styles.backdrop, { backgroundColor: theme.backgroundColor }], children: [scannerReady ? ((0, jsx_runtime_1.jsx)(expo_camera_1.CameraView, { style: react_native_1.StyleSheet.absoluteFill, facing: "back", onBarcodeScanned: handleBarcodeScanned, barcodeScannerSettings: { barcodeTypes: ['qr'] } })) : ((0, jsx_runtime_1.jsx)(react_native_1.Pressable, { style: react_native_1.StyleSheet.absoluteFill, onPress: onClose })), scannerReady && (0, jsx_runtime_1.jsx)(react_native_1.View, { style: styles.scanShade, pointerEvents: "none" }), (0, jsx_runtime_1.jsxs)(react_native_1.View, { style: [styles.card, mode === 'scan' && styles.scanCard, { backgroundColor: theme.cardColor, borderColor: theme.borderColor }], children: [(0, jsx_runtime_1.jsx)(expo_blur_1.BlurView, { intensity: theme.isDark ? 28 : 20, tint: theme.isDark ? 'dark' : 'light', style: react_native_1.StyleSheet.absoluteFill }), (0, jsx_runtime_1.jsx)(react_native_1.View, { style: [styles.accentLine, { backgroundColor: theme.accentColor }] }), (0, jsx_runtime_1.jsxs)(react_native_1.View, { style: styles.header, children: [mode !== 'menu' ? ((0, jsx_runtime_1.jsx)(react_native_1.Pressable, { onPress: () => {
                                         setMode('menu');
                                         setScanned(false);
                                         setError(null);
-                                    }, style: [styles.iconButton, { backgroundColor: theme.mutedColor }], children: _jsx(ArrowLeft, { size: 18, color: theme.textColor, strokeWidth: 1.7 }) })) : (_jsx(View, { style: [styles.iconButton, { backgroundColor: theme.mutedColor }], children: _jsx(Smartphone, { size: 18, color: theme.textColor, strokeWidth: 1.7 }) })), _jsxs(View, { style: styles.headerCopy, children: [_jsx(Text, { style: [styles.kicker, { color: theme.textFaintColor }, mediumFont], children: labels.kicker }), _jsx(Text, { style: [styles.title, { color: theme.textColor }, lightFont], children: labels.title })] }), _jsx(Pressable, { onPress: onClose, style: [styles.iconButton, { backgroundColor: theme.mutedColor }], children: _jsx(X, { size: 18, color: theme.textColor, strokeWidth: 1.7 }) })] }), mode === 'menu' && (_jsxs(View, { style: styles.content, children: [_jsx(Text, { style: [styles.description, { color: theme.textSecondaryColor }, regularFont], children: labels.description }), _jsx(ChoiceButton, { title: labels.showQr, description: labels.showQrDescription, icon: _jsx(QrCode, { size: 20, color: theme.cardColor, strokeWidth: 1.8 }), iconColor: theme.textColor, theme: theme, regularFont: regularFont, mediumFont: mediumFont, onPress: () => setMode('show') }), _jsx(ChoiceButton, { title: labels.scanQr, description: labels.scanQrDescription, icon: _jsx(ScanLine, { size: 20, color: "#FFFFFF", strokeWidth: 1.8 }), iconColor: theme.accentColor, theme: theme, regularFont: regularFont, mediumFont: mediumFont, onPress: () => setMode('scan') })] })), mode === 'show' && (_jsxs(View, { style: [styles.content, styles.centerContent], children: [_jsx(Text, { style: [styles.description, { color: theme.textSecondaryColor }, regularFont], children: labels.showInstruction }), _jsx(View, { style: styles.qrShell, children: !!qrValue && _jsx(QRCode, { value: qrValue, size: qrSize, backgroundColor: "#FFFFFF", color: "#000000" }) }), _jsx(Text, { style: [styles.deviceId, { color: theme.textFaintColor }], numberOfLines: 1, children: deviceId })] })), mode === 'scan' && (_jsx(View, { style: [styles.content, styles.centerContent], children: !permission?.granted ? (_jsxs(_Fragment, { children: [_jsx(Text, { style: [styles.description, { color: theme.textSecondaryColor }, regularFont], children: labels.cameraPermission }), _jsx(Pressable, { onPress: requestPermission, style: ({ pressed }) => [styles.primaryButton, { backgroundColor: theme.textColor, opacity: pressed ? 0.72 : 1 }], children: _jsx(Text, { style: [styles.primaryButtonText, { color: theme.cardColor }, boldFont], children: labels.allowCamera }) })] })) : (_jsxs(_Fragment, { children: [_jsx(View, { style: styles.scanFrame }), _jsx(Text, { style: [styles.scanHint, regularFont], children: applying ? labels.applying : labels.scanInstruction }), !!error && _jsx(Text, { style: [styles.errorText, mediumFont], children: error })] })) }))] })] }) }));
+                                    }, style: [styles.iconButton, { backgroundColor: theme.mutedColor }], children: (0, jsx_runtime_1.jsx)(lucide_react_native_1.ArrowLeft, { size: 18, color: theme.textColor, strokeWidth: 1.7 }) })) : ((0, jsx_runtime_1.jsx)(react_native_1.View, { style: [styles.iconButton, { backgroundColor: theme.mutedColor }], children: (0, jsx_runtime_1.jsx)(lucide_react_native_1.Smartphone, { size: 18, color: theme.textColor, strokeWidth: 1.7 }) })), (0, jsx_runtime_1.jsxs)(react_native_1.View, { style: styles.headerCopy, children: [(0, jsx_runtime_1.jsx)(react_native_1.Text, { style: [styles.kicker, { color: theme.textFaintColor }, mediumFont], children: labels.kicker }), (0, jsx_runtime_1.jsx)(react_native_1.Text, { style: [styles.title, { color: theme.textColor }, lightFont], children: labels.title })] }), (0, jsx_runtime_1.jsx)(react_native_1.Pressable, { onPress: onClose, style: [styles.iconButton, { backgroundColor: theme.mutedColor }], children: (0, jsx_runtime_1.jsx)(lucide_react_native_1.X, { size: 18, color: theme.textColor, strokeWidth: 1.7 }) })] }), mode === 'menu' && ((0, jsx_runtime_1.jsxs)(react_native_1.View, { style: styles.content, children: [(0, jsx_runtime_1.jsx)(react_native_1.Text, { style: [styles.description, { color: theme.textSecondaryColor }, regularFont], children: labels.description }), (0, jsx_runtime_1.jsx)(ChoiceButton, { title: labels.showQr, description: labels.showQrDescription, icon: (0, jsx_runtime_1.jsx)(lucide_react_native_1.QrCode, { size: 20, color: theme.cardColor, strokeWidth: 1.8 }), iconColor: theme.textColor, theme: theme, regularFont: regularFont, mediumFont: mediumFont, onPress: () => setMode('show') }), (0, jsx_runtime_1.jsx)(ChoiceButton, { title: labels.scanQr, description: labels.scanQrDescription, icon: (0, jsx_runtime_1.jsx)(lucide_react_native_1.ScanLine, { size: 20, color: "#FFFFFF", strokeWidth: 1.8 }), iconColor: theme.accentColor, theme: theme, regularFont: regularFont, mediumFont: mediumFont, onPress: () => setMode('scan') })] })), mode === 'show' && ((0, jsx_runtime_1.jsxs)(react_native_1.View, { style: [styles.content, styles.centerContent], children: [(0, jsx_runtime_1.jsx)(react_native_1.Text, { style: [styles.description, { color: theme.textSecondaryColor }, regularFont], children: labels.showInstruction }), (0, jsx_runtime_1.jsx)(react_native_1.View, { style: styles.qrShell, children: !!qrValue && (0, jsx_runtime_1.jsx)(react_native_qrcode_svg_1.default, { value: qrValue, size: qrSize, backgroundColor: "#FFFFFF", color: "#000000" }) }), (0, jsx_runtime_1.jsx)(react_native_1.Text, { style: [styles.deviceId, { color: theme.textFaintColor }], numberOfLines: 1, children: deviceId })] })), mode === 'scan' && ((0, jsx_runtime_1.jsx)(react_native_1.View, { style: [styles.content, styles.centerContent], children: !permission?.granted ? ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)(react_native_1.Text, { style: [styles.description, { color: theme.textSecondaryColor }, regularFont], children: labels.cameraPermission }), (0, jsx_runtime_1.jsx)(react_native_1.Pressable, { onPress: requestPermission, style: ({ pressed }) => [styles.primaryButton, { backgroundColor: theme.textColor, opacity: pressed ? 0.72 : 1 }], children: (0, jsx_runtime_1.jsx)(react_native_1.Text, { style: [styles.primaryButtonText, { color: theme.cardColor }, boldFont], children: labels.allowCamera }) })] })) : ((0, jsx_runtime_1.jsxs)(jsx_runtime_1.Fragment, { children: [(0, jsx_runtime_1.jsx)(react_native_1.View, { style: styles.scanFrame }), (0, jsx_runtime_1.jsx)(react_native_1.Text, { style: [styles.scanHint, regularFont], children: applying ? labels.applying : labels.scanInstruction }), !!error && (0, jsx_runtime_1.jsx)(react_native_1.Text, { style: [styles.errorText, mediumFont], children: error })] })) }))] })] }) }));
 }
 function ChoiceButton({ title, description, icon, iconColor, theme, regularFont, mediumFont, onPress, }) {
-    return (_jsxs(Pressable, { onPress: onPress, style: ({ pressed }) => [
+    return ((0, jsx_runtime_1.jsxs)(react_native_1.Pressable, { onPress: onPress, style: ({ pressed }) => [
             styles.choice,
             { backgroundColor: theme.mutedColor, borderColor: theme.borderColor, opacity: pressed ? 0.7 : 1 },
-        ], children: [_jsx(View, { style: [styles.choiceIcon, { backgroundColor: iconColor }], children: icon }), _jsxs(View, { style: styles.choiceCopy, children: [_jsx(Text, { style: [styles.choiceTitle, { color: theme.textColor }, mediumFont], children: title }), _jsx(Text, { style: [styles.choiceText, { color: theme.textSecondaryColor }, regularFont], children: description })] })] }));
+        ], children: [(0, jsx_runtime_1.jsx)(react_native_1.View, { style: [styles.choiceIcon, { backgroundColor: iconColor }], children: icon }), (0, jsx_runtime_1.jsxs)(react_native_1.View, { style: styles.choiceCopy, children: [(0, jsx_runtime_1.jsx)(react_native_1.Text, { style: [styles.choiceTitle, { color: theme.textColor }, mediumFont], children: title }), (0, jsx_runtime_1.jsx)(react_native_1.Text, { style: [styles.choiceText, { color: theme.textSecondaryColor }, regularFont], children: description })] })] }));
 }
 function fontStyle(fontFamily) {
     return fontFamily ? { fontFamily } : {};
 }
-const styles = StyleSheet.create({
+const styles = react_native_1.StyleSheet.create({
     backdrop: {
         flex: 1,
         justifyContent: 'center',
         paddingHorizontal: 24,
     },
     scanShade: {
-        ...StyleSheet.absoluteFillObject,
+        ...react_native_1.StyleSheet.absoluteFillObject,
         backgroundColor: 'rgba(0,0,0,0.28)',
     },
     card: {
         overflow: 'hidden',
         borderRadius: 32,
-        borderWidth: StyleSheet.hairlineWidth,
+        borderWidth: react_native_1.StyleSheet.hairlineWidth,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.15,
@@ -176,7 +182,7 @@ const styles = StyleSheet.create({
     choice: {
         flexDirection: 'row',
         alignItems: 'center',
-        borderWidth: StyleSheet.hairlineWidth,
+        borderWidth: react_native_1.StyleSheet.hairlineWidth,
         borderRadius: 24,
         padding: 16,
         gap: 12,

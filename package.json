@@ -1,6 +1,6 @@
 {
   "name": "@life-hack-tools/device-handoff",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React Native / Expo QR device handoff UI and payload helpers.",
   "license": "MIT",
   "sideEffects": false,
