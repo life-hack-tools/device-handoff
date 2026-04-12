@@ -8,3 +8,5 @@ export {
   parseDeviceHandoffPayload,
 } from './payload';
 export type { DeviceHandoffPayloadOptions } from './payload';
+export { restoreRecords } from './restore';
+export type { HandoffMergeAction, HandoffResult, RestoreRecordsOptions } from './restore';

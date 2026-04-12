@@ -26,3 +26,7 @@ import { DeviceHandoffModal } from '@life-hack-tools/device-handoff';
   }}
 />
 ```
+
+## Data Restore
+
+Use `restoreRecords()` when the scanned handoff key unlocks remote data and you need to merge that data into local storage.

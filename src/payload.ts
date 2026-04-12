@@ -16,11 +16,13 @@ export function createDeviceHandoffPayload(
   deviceId: string,
   options: DeviceHandoffPayloadOptions = {},
 ): string {
-  return JSON.stringify({
+  const payload: DeviceHandoffPayload = {
     type: options.type ?? DEFAULT_HANDOFF_TYPE,
     version: options.version ?? DEFAULT_HANDOFF_VERSION,
     deviceId,
-  } satisfies DeviceHandoffPayload);
+  };
+
+  return JSON.stringify(payload);
 }
 
 export function parseDeviceHandoffPayload(

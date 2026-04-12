@@ -7,11 +7,12 @@ exports.isLikelyDeviceId = isLikelyDeviceId;
 exports.DEFAULT_HANDOFF_TYPE = 'life-hack-tools-device-handoff';
 exports.DEFAULT_HANDOFF_VERSION = 1;
 function createDeviceHandoffPayload(deviceId, options = {}) {
-    return JSON.stringify({
+    const payload = {
         type: options.type ?? exports.DEFAULT_HANDOFF_TYPE,
         version: options.version ?? exports.DEFAULT_HANDOFF_VERSION,
         deviceId,
-    });
+    };
+    return JSON.stringify(payload);
 }
 function parseDeviceHandoffPayload(value, options = {}) {
     const trimmed = value.trim();
