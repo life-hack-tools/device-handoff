@@ -1,0 +1,51 @@
+{
+  "name": "@life-hack-tools/device-handoff",
+  "version": "0.1.0",
+  "description": "React Native / Expo QR device handoff UI and payload helpers.",
+  "license": "MIT",
+  "sideEffects": false,
+  "main": "dist/index.js",
+  "react-native": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepack": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/life-hack-tools/device-handoff.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "expo-blur": ">=14",
+    "expo-camera": ">=16",
+    "lucide-react-native": ">=0.400.0",
+    "react": ">=18",
+    "react-native": ">=0.72",
+    "react-native-qrcode-svg": ">=6",
+    "react-native-svg": ">=13"
+  },
+  "devDependencies": {
+    "@types/react": "~19.1.10",
+    "expo-blur": "~15.0.8",
+    "expo-camera": "~17.0.10",
+    "lucide-react-native": "latest",
+    "react": "^19.1.0",
+    "react-native": "^0.81.0",
+    "react-native-qrcode-svg": "^6.3.21",
+    "react-native-svg": "^15.12.1",
+    "typescript": "~5.9.2"
+  }
+}
