@@ -3,8 +3,11 @@ export type { DeviceHandoffLabels, DeviceHandoffModalProps, DeviceHandoffTheme }
 export {
   DEFAULT_HANDOFF_TYPE,
   DEFAULT_HANDOFF_VERSION,
+  createHandoffPayload,
   createDeviceHandoffPayload,
+  isLikelyHandoffValue,
   isLikelyDeviceId,
+  parseHandoffPayload,
   parseDeviceHandoffPayload,
 } from './payload';
 export type { DeviceHandoffPayloadOptions } from './payload';

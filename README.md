@@ -1,13 +1,13 @@
 # @life-hack-tools/device-handoff
 
-React Native / Expo QR device handoff UI and payload helpers.
+React Native / Expo QR handoff UI and payload helpers.
 
 ## Features
 
-- Show a QR code for the current device identity
+- Show a QR code for the current app-owned identifier
 - Scan a QR code with `expo-camera`
 - Validate structured handoff payloads
-- Keep app-specific identity storage and restore logic outside the package
+- Keep app-specific storage and restore logic outside the package
 
 ## Usage
 
@@ -16,16 +16,19 @@ import { DeviceHandoffModal } from '@life-hack-tools/device-handoff';
 
 <DeviceHandoffModal
   visible={visible}
-  deviceId={deviceId}
-  payloadType="worddiary-handoff"
+  value={userId}
+  payloadType="my-app-handoff"
   labels={labels}
   onClose={() => setVisible(false)}
-  onApplyDeviceId={async (nextDeviceId) => {
-    await saveDeviceId(nextDeviceId);
-    await restoreRemoteData();
+  validateValue={(value) => value.length > 0}
+  onApplyValue={async (nextValue) => {
+    await saveUserId(nextValue);
+    await restoreRemoteData(nextValue);
   }}
 />
 ```
+
+`deviceId`, `onApplyDeviceId`, and `validateDeviceId` remain available as backward-compatible aliases.
 
 ## Data Restore
 

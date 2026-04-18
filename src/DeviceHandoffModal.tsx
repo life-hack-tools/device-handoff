@@ -42,14 +42,19 @@ export interface DeviceHandoffTheme {
 
 export interface DeviceHandoffModalProps {
   visible: boolean;
-  deviceId: string | null;
+  value?: string | null;
+  deviceId?: string | null;
   onClose: () => void;
-  onApplyDeviceId: (deviceId: string) => Promise<void>;
+  onApplyValue?: (value: string) => Promise<void>;
+  onApplyDeviceId?: (deviceId: string) => Promise<void>;
   labels?: Partial<DeviceHandoffLabels>;
   theme?: DeviceHandoffTheme;
   payloadType?: string;
   payloadVersion?: number;
   qrSize?: number;
+  validateValue?: (value: string) => boolean;
+  validateDeviceId?: (deviceId: string) => boolean;
+  availableModes?: HandoffMode[];
 }
 
 type HandoffMode = 'menu' | 'show' | 'scan';
@@ -89,14 +94,19 @@ const DEFAULT_THEME: Required<DeviceHandoffTheme> = {
 
 export function DeviceHandoffModal({
   visible,
+  value,
   deviceId,
   onClose,
+  onApplyValue,
   onApplyDeviceId,
   labels: labelsProp,
   theme: themeProp,
   payloadType,
   payloadVersion,
   qrSize = 210,
+  validateValue,
+  validateDeviceId,
+  availableModes = ['show', 'scan'],
 }: DeviceHandoffModalProps) {
   const labels = { ...DEFAULT_LABELS, ...labelsProp };
   const theme = { ...DEFAULT_THEME, ...themeProp };
@@ -106,19 +116,30 @@ export function DeviceHandoffModal({
   const [error, setError] = useState<string | null>(null);
   const [applying, setApplying] = useState(false);
 
-  const payloadOptions = useMemo(() => ({ type: payloadType, version: payloadVersion }), [payloadType, payloadVersion]);
-  const qrValue = useMemo(
-    () => (deviceId ? createDeviceHandoffPayload(deviceId, payloadOptions) : ''),
-    [deviceId, payloadOptions],
+  const currentValue = value ?? deviceId ?? null;
+  const applyValue = onApplyValue ?? onApplyDeviceId;
+  const resolvedValidateValue = validateValue ?? validateDeviceId;
+  const payloadOptions = useMemo(
+    () => ({ type: payloadType, version: payloadVersion, validateValue: resolvedValidateValue }),
+    [payloadType, payloadVersion, resolvedValidateValue],
   );
+  const qrValue = useMemo(
+    () => (currentValue ? createDeviceHandoffPayload(currentValue, payloadOptions) : ''),
+    [currentValue, payloadOptions],
+  );
+  const allowedModes = useMemo(
+    () => availableModes.filter((mode): mode is HandoffMode => mode === 'show' || mode === 'scan'),
+    [availableModes],
+  );
+  const defaultMode = allowedModes[0] ?? 'show';
 
   useEffect(() => {
     if (!visible) return;
-    setMode('menu');
+    setMode(allowedModes.length > 1 ? 'menu' : defaultMode);
     setScanned(false);
     setError(null);
     setApplying(false);
-  }, [visible]);
+  }, [allowedModes.length, defaultMode, visible]);
 
   useEffect(() => {
     if (visible && mode === 'scan' && permission && !permission.granted) {
@@ -141,7 +162,10 @@ export function DeviceHandoffModal({
 
     try {
       setApplying(true);
-      await onApplyDeviceId(nextDeviceId);
+      if (!applyValue) {
+        throw new Error('DeviceHandoffModal requires onApplyValue or onApplyDeviceId.');
+      }
+      await applyValue(nextDeviceId);
       onClose();
     } catch {
       setError(labels.applyError);
@@ -206,26 +230,30 @@ export function DeviceHandoffModal({
           {mode === 'menu' && (
             <View style={styles.content}>
               <Text style={[styles.description, { color: theme.textSecondaryColor }, regularFont]}>{labels.description}</Text>
-              <ChoiceButton
-                title={labels.showQr}
-                description={labels.showQrDescription}
-                icon={<QrCode size={20} color={theme.cardColor} strokeWidth={1.8} />}
-                iconColor={theme.textColor}
-                theme={theme}
-                regularFont={regularFont}
-                mediumFont={mediumFont}
-                onPress={() => setMode('show')}
-              />
-              <ChoiceButton
-                title={labels.scanQr}
-                description={labels.scanQrDescription}
-                icon={<ScanLine size={20} color="#FFFFFF" strokeWidth={1.8} />}
-                iconColor={theme.accentColor}
-                theme={theme}
-                regularFont={regularFont}
-                mediumFont={mediumFont}
-                onPress={() => setMode('scan')}
-              />
+              {allowedModes.includes('show') && (
+                <ChoiceButton
+                  title={labels.showQr}
+                  description={labels.showQrDescription}
+                  icon={<QrCode size={20} color={theme.cardColor} strokeWidth={1.8} />}
+                  iconColor={theme.textColor}
+                  theme={theme}
+                  regularFont={regularFont}
+                  mediumFont={mediumFont}
+                  onPress={() => setMode('show')}
+                />
+              )}
+              {allowedModes.includes('scan') && (
+                <ChoiceButton
+                  title={labels.scanQr}
+                  description={labels.scanQrDescription}
+                  icon={<ScanLine size={20} color="#FFFFFF" strokeWidth={1.8} />}
+                  iconColor={theme.accentColor}
+                  theme={theme}
+                  regularFont={regularFont}
+                  mediumFont={mediumFont}
+                  onPress={() => setMode('scan')}
+                />
+              )}
             </View>
           )}
 
@@ -235,7 +263,7 @@ export function DeviceHandoffModal({
               <View style={styles.qrShell}>
                 {!!qrValue && <QRCode value={qrValue} size={qrSize} backgroundColor="#FFFFFF" color="#000000" />}
               </View>
-              <Text style={[styles.deviceId, { color: theme.textFaintColor }]} numberOfLines={1}>{deviceId}</Text>
+              <Text style={[styles.deviceId, { color: theme.textFaintColor }]} numberOfLines={1}>{currentValue}</Text>
             </View>
           )}
 

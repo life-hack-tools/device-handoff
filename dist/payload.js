@@ -1,22 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DEFAULT_HANDOFF_VERSION = exports.DEFAULT_HANDOFF_TYPE = void 0;
-exports.createDeviceHandoffPayload = createDeviceHandoffPayload;
-exports.parseDeviceHandoffPayload = parseDeviceHandoffPayload;
+exports.isLikelyHandoffValue = exports.parseDeviceHandoffPayload = exports.createDeviceHandoffPayload = exports.DEFAULT_HANDOFF_VERSION = exports.DEFAULT_HANDOFF_TYPE = void 0;
+exports.createHandoffPayload = createHandoffPayload;
+exports.parseHandoffPayload = parseHandoffPayload;
 exports.isLikelyDeviceId = isLikelyDeviceId;
 exports.DEFAULT_HANDOFF_TYPE = 'life-hack-tools-device-handoff';
 exports.DEFAULT_HANDOFF_VERSION = 1;
-function createDeviceHandoffPayload(deviceId, options = {}) {
+function createHandoffPayload(value, options = {}) {
     const payload = {
         type: options.type ?? exports.DEFAULT_HANDOFF_TYPE,
         version: options.version ?? exports.DEFAULT_HANDOFF_VERSION,
-        deviceId,
+        deviceId: value,
     };
     return JSON.stringify(payload);
 }
-function parseDeviceHandoffPayload(value, options = {}) {
+function parseHandoffPayload(value, options = {}) {
     const trimmed = value.trim();
-    if (isLikelyDeviceId(trimmed)) {
+    const validateValue = options.validateValue ?? options.validateDeviceId ?? isLikelyDeviceId;
+    if (validateValue(trimmed)) {
         return trimmed;
     }
     try {
@@ -24,7 +25,7 @@ function parseDeviceHandoffPayload(value, options = {}) {
         if (parsed.type === (options.type ?? exports.DEFAULT_HANDOFF_TYPE)
             && parsed.version === (options.version ?? exports.DEFAULT_HANDOFF_VERSION)
             && typeof parsed.deviceId === 'string'
-            && isLikelyDeviceId(parsed.deviceId)) {
+            && validateValue(parsed.deviceId)) {
             return parsed.deviceId;
         }
     }
@@ -36,4 +37,7 @@ function parseDeviceHandoffPayload(value, options = {}) {
 function isLikelyDeviceId(value) {
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 }
+exports.createDeviceHandoffPayload = createHandoffPayload;
+exports.parseDeviceHandoffPayload = parseHandoffPayload;
+exports.isLikelyHandoffValue = isLikelyDeviceId;
 //# sourceMappingURL=payload.js.map

@@ -31,14 +31,21 @@ export interface DeviceHandoffTheme {
 }
 export interface DeviceHandoffModalProps {
     visible: boolean;
-    deviceId: string | null;
+    value?: string | null;
+    deviceId?: string | null;
     onClose: () => void;
-    onApplyDeviceId: (deviceId: string) => Promise<void>;
+    onApplyValue?: (value: string) => Promise<void>;
+    onApplyDeviceId?: (deviceId: string) => Promise<void>;
     labels?: Partial<DeviceHandoffLabels>;
     theme?: DeviceHandoffTheme;
     payloadType?: string;
     payloadVersion?: number;
     qrSize?: number;
+    validateValue?: (value: string) => boolean;
+    validateDeviceId?: (deviceId: string) => boolean;
+    availableModes?: HandoffMode[];
 }
-export declare function DeviceHandoffModal({ visible, deviceId, onClose, onApplyDeviceId, labels: labelsProp, theme: themeProp, payloadType, payloadVersion, qrSize, }: DeviceHandoffModalProps): import("react/jsx-runtime").JSX.Element;
+type HandoffMode = 'menu' | 'show' | 'scan';
+export declare function DeviceHandoffModal({ visible, value, deviceId, onClose, onApplyValue, onApplyDeviceId, labels: labelsProp, theme: themeProp, payloadType, payloadVersion, qrSize, validateValue, validateDeviceId, availableModes, }: DeviceHandoffModalProps): import("react/jsx-runtime").JSX.Element;
+export {};
 //# sourceMappingURL=DeviceHandoffModal.d.ts.map
